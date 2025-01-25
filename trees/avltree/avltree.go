@@ -22,9 +22,11 @@ var _ trees.Tree[int] = (*Tree[string, int])(nil)
 
 // Tree holds elements of the AVL tree.
 type Tree[K comparable, V any] struct {
-	Root       *Node[K, V]         // Root node
-	Comparator utils.Comparator[K] // Key comparator
-	size       int                 // Total number of keys in the tree
+	Root             *Node[K, V]         // Root node
+	Comparator       utils.Comparator[K] // Key comparator
+	DirectComparator utils.DirectComparator[K]
+
+	size int // Total number of keys in the tree
 }
 
 // Node is a single element within the tree
@@ -187,6 +189,27 @@ func (tree *Tree[K, V]) Ceiling(key K) (floor *Node[K, V], found bool) {
 	n := tree.Root
 	for n != nil {
 		c := tree.Comparator(key, n.Key)
+		switch {
+		case c == 0:
+			return n, true
+		case c < 0:
+			floor, found = n, true
+			n = n.Children[0]
+		case c > 0:
+			n = n.Children[1]
+		}
+	}
+	if found {
+		return
+	}
+	return nil, false
+}
+
+func (tree *Tree[K, V]) CeilingDirect(key string) (floor *Node[K, V], found bool) {
+	found = false
+	n := tree.Root
+	for n != nil {
+		c := tree.DirectComparator(key, n.Key)
 		switch {
 		case c == 0:
 			return n, true

@@ -8,6 +8,8 @@ import "time"
 
 type Comparator[T any] func(x, y T) int
 
+type DirectComparator[T any] func(x string, y T) int
+
 // TimeComparator provides a basic comparison on time.Time
 func TimeComparator(a, b time.Time) int {
 	switch {
