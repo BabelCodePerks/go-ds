@@ -15,7 +15,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/queues"
+	"github.com/BabelCodePerks/go-ds/queues"
 )
 
 // Assert Queue implementation

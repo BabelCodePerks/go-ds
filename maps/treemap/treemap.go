@@ -16,9 +16,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/maps"
-	rbt "github.com/emirpasic/gods/v2/trees/redblacktree"
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/maps"
+	rbt "github.com/BabelCodePerks/go-ds/trees/redblacktree"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // Assert Map implementation

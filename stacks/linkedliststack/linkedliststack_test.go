@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/emirpasic/gods/v2/testutils"
+	"github.com/BabelCodePerks/go-ds/testutils"
 )
 
 func TestStackPush(t *testing.T) {

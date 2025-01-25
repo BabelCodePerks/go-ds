@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 
-	avl "github.com/emirpasic/gods/v2/trees/avltree"
+	avl "github.com/BabelCodePerks/go-ds/trees/avltree"
 )
 
 // AVLTreeExample to demonstrate basic usage of AVLTree

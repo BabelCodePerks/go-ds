@@ -7,7 +7,7 @@ package main
 import (
 	"cmp"
 
-	"github.com/emirpasic/gods/v2/trees/binaryheap"
+	"github.com/BabelCodePerks/go-ds/trees/binaryheap"
 )
 
 // BinaryHeapExample to demonstrate basic usage of BinaryHeap

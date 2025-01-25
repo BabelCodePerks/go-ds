@@ -4,7 +4,7 @@
 
 package main
 
-import "github.com/emirpasic/gods/v2/maps/hashbidimap"
+import "github.com/BabelCodePerks/go-ds/maps/hashbidimap"
 
 // HashBidiMapExample to demonstrate basic usage of HashMap
 func main() {

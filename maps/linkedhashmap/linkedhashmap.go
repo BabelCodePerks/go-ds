@@ -15,8 +15,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/lists/doublylinkedlist"
-	"github.com/emirpasic/gods/v2/maps"
+	"github.com/BabelCodePerks/go-ds/lists/doublylinkedlist"
+	"github.com/BabelCodePerks/go-ds/maps"
 )
 
 // Assert Map implementation

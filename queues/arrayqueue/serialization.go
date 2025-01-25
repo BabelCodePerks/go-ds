@@ -5,7 +5,7 @@
 package arrayqueue
 
 import (
-	"github.com/emirpasic/gods/v2/containers"
+	"github.com/BabelCodePerks/go-ds/containers"
 )
 
 // Assert Serialization implementation

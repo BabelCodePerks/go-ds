@@ -5,8 +5,8 @@
 package treeset
 
 import (
-	"github.com/emirpasic/gods/v2/containers"
-	rbt "github.com/emirpasic/gods/v2/trees/redblacktree"
+	"github.com/BabelCodePerks/go-ds/containers"
+	rbt "github.com/BabelCodePerks/go-ds/trees/redblacktree"
 )
 
 // Assert Iterator implementation

@@ -7,7 +7,7 @@ package main
 import (
 	"fmt"
 
-	"github.com/emirpasic/gods/v2/trees/btree"
+	"github.com/BabelCodePerks/go-ds/trees/btree"
 )
 
 // BTreeExample to demonstrate basic usage of BTree

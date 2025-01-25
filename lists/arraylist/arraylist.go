@@ -14,8 +14,8 @@ import (
 	"slices"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/lists"
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/lists"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // Assert List implementation

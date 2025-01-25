@@ -9,7 +9,7 @@
 // Reference: https://en.wikipedia.org/wiki/Tree_%28data_structure%29
 package trees
 
-import "github.com/emirpasic/gods/v2/containers"
+import "github.com/BabelCodePerks/go-ds/containers"
 
 // Tree interface that all trees implement
 type Tree[V any] interface {

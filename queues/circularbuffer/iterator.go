@@ -4,7 +4,7 @@
 
 package circularbuffer
 
-import "github.com/emirpasic/gods/v2/containers"
+import "github.com/BabelCodePerks/go-ds/containers"
 
 // Assert Iterator implementation
 var _ containers.ReverseIteratorWithIndex[int] = (*Iterator[int])(nil)

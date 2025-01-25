@@ -1,3 +1,3 @@
-module github.com/emirpasic/gods/v2
+module github.com/BabelCodePerks/go-ds
 
-go 1.21
+go 1.23.0

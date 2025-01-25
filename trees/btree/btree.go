@@ -22,8 +22,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/trees"
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/trees"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // Assert Tree implementation

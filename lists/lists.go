@@ -10,8 +10,8 @@
 package lists
 
 import (
-	"github.com/emirpasic/gods/v2/containers"
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/containers"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // List interface that all lists implement

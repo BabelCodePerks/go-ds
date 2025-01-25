@@ -7,7 +7,7 @@ package main
 import (
 	"cmp"
 
-	"github.com/emirpasic/gods/v2/lists/arraylist"
+	"github.com/BabelCodePerks/go-ds/lists/arraylist"
 )
 
 // ArrayListExample to demonstrate basic usage of ArrayList

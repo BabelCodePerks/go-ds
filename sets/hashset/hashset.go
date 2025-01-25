@@ -13,7 +13,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/sets"
+	"github.com/BabelCodePerks/go-ds/sets"
 )
 
 // Assert Set implementation

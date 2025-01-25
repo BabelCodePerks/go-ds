@@ -17,7 +17,7 @@ import (
 	"cmp"
 	"slices"
 
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // Container is base interface that all data structures implement.

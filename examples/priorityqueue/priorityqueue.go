@@ -7,7 +7,7 @@ package main
 import (
 	"cmp"
 
-	pq "github.com/emirpasic/gods/v2/queues/priorityqueue"
+	pq "github.com/BabelCodePerks/go-ds/queues/priorityqueue"
 )
 
 // Element is an entry in the priority queue

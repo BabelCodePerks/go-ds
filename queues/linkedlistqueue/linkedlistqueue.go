@@ -13,8 +13,8 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/lists/singlylinkedlist"
-	"github.com/emirpasic/gods/v2/queues"
+	"github.com/BabelCodePerks/go-ds/lists/singlylinkedlist"
+	"github.com/BabelCodePerks/go-ds/queues"
 )
 
 // Assert Queue implementation

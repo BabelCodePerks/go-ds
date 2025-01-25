@@ -4,7 +4,7 @@
 
 package doublylinkedlist
 
-import "github.com/emirpasic/gods/v2/containers"
+import "github.com/BabelCodePerks/go-ds/containers"
 
 // Assert Enumerable implementation
 var _ containers.EnumerableWithIndex[int] = (*List[int])(nil)

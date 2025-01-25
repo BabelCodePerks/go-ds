@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/emirpasic/gods/v2/queues"
-	"github.com/emirpasic/gods/v2/trees/binaryheap"
-	"github.com/emirpasic/gods/v2/utils"
+	"github.com/BabelCodePerks/go-ds/queues"
+	"github.com/BabelCodePerks/go-ds/trees/binaryheap"
+	"github.com/BabelCodePerks/go-ds/utils"
 )
 
 // Assert Queue implementation

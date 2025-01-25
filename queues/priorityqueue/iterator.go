@@ -5,8 +5,8 @@
 package priorityqueue
 
 import (
-	"github.com/emirpasic/gods/v2/containers"
-	"github.com/emirpasic/gods/v2/trees/binaryheap"
+	"github.com/BabelCodePerks/go-ds/containers"
+	"github.com/BabelCodePerks/go-ds/trees/binaryheap"
 )
 
 // Assert Iterator implementation

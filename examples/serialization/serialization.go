@@ -3,8 +3,8 @@ package serialization
 import (
 	"fmt"
 
-	"github.com/emirpasic/gods/v2/lists/arraylist"
-	"github.com/emirpasic/gods/v2/maps/hashmap"
+	"github.com/BabelCodePerks/go-ds/lists/arraylist"
+	"github.com/BabelCodePerks/go-ds/maps/hashmap"
 )
 
 // ListSerializationExample demonstrates how to serialize and deserialize lists to and from JSON

@@ -5,7 +5,7 @@
 package main
 
 import (
-	"github.com/emirpasic/gods/v2/maps/treebidimap"
+	"github.com/BabelCodePerks/go-ds/maps/treebidimap"
 )
 
 // TreeBidiMapExample to demonstrate basic usage of TreeBidiMap
