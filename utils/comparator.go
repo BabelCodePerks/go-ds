@@ -8,7 +8,8 @@ import "time"
 
 type Comparator[T any] func(x, y T) int
 
-type DirectComparator[T any] func(x string, y T) int
+// a Comparator2 is a special thing for Ceiling2 and Floor2
+type Comparator2[T any] func(x string, y T) int
 
 // TimeComparator provides a basic comparison on time.Time
 func TimeComparator(a, b time.Time) int {

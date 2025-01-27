@@ -22,9 +22,9 @@ var _ trees.Tree[int] = (*Tree[string, int])(nil)
 
 // Tree holds elements of the AVL tree.
 type Tree[K comparable, V any] struct {
-	Root             *Node[K, V]         // Root node
-	Comparator       utils.Comparator[K] // Key comparator
-	DirectComparator utils.DirectComparator[K]
+	Root        *Node[K, V]         // Root node
+	Comparator  utils.Comparator[K] // Key comparator
+	Comparator2 utils.Comparator2[K]
 
 	size int // Total number of keys in the tree
 }
@@ -176,6 +176,27 @@ func (tree *Tree[K, V]) Floor(key K) (floor *Node[K, V], found bool) {
 	return nil, false
 }
 
+func (tree *Tree[K, V]) Floor2(value string) (floor *Node[K, V], found bool) {
+	found = false
+	n := tree.Root
+	for n != nil {
+		c := tree.Comparator2(value, n.Key)
+		switch {
+		case c == 0:
+			return n, true
+		case c < 0:
+			n = n.Children[0]
+		case c > 0:
+			floor, found = n, true
+			n = n.Children[1]
+		}
+	}
+	if found {
+		return
+	}
+	return nil, false
+}
+
 // Ceiling finds ceiling node of the input key, return the ceiling node or nil if no ceiling is found.
 // Second return parameter is true if ceiling was found, otherwise false.
 //
@@ -184,7 +205,7 @@ func (tree *Tree[K, V]) Floor(key K) (floor *Node[K, V], found bool) {
 // all nodes in the tree is smaller than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Ceiling(key K) (floor *Node[K, V], found bool) {
+func (tree *Tree[K, V]) Ceiling(key K) (ceil *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
@@ -193,7 +214,7 @@ func (tree *Tree[K, V]) Ceiling(key K) (floor *Node[K, V], found bool) {
 		case c == 0:
 			return n, true
 		case c < 0:
-			floor, found = n, true
+			ceil, found = n, true
 			n = n.Children[0]
 		case c > 0:
 			n = n.Children[1]
@@ -205,16 +226,16 @@ func (tree *Tree[K, V]) Ceiling(key K) (floor *Node[K, V], found bool) {
 	return nil, false
 }
 
-func (tree *Tree[K, V]) CeilingDirect(key string) (floor *Node[K, V], found bool) {
+func (tree *Tree[K, V]) Ceiling2(concreteValue string) (ceil *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
-		c := tree.DirectComparator(key, n.Key)
+		c := tree.Comparator2(concreteValue, n.Key)
 		switch {
 		case c == 0:
 			return n, true
 		case c < 0:
-			floor, found = n, true
+			ceil, found = n, true
 			n = n.Children[0]
 		case c > 0:
 			n = n.Children[1]
