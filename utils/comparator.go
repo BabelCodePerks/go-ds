@@ -6,10 +6,11 @@ package utils
 
 import "time"
 
-type Comparator[T any] func(x, y T) int
+type Comparator[K any] func(key1, key2 K) int
 
-// a Comparator2 is a special thing for Ceiling2 and Floor2
-type Comparator2[T any] func(x string, y T) int
+// A Comparator2 is used by Get(Node)2, Ceiling2 and Floor2. The actual comparator function must assert,
+// convert or otherwise parse search as needed.
+type Comparator2[K any, S any] func(search S, key K) int
 
 // TimeComparator provides a basic comparison on time.Time
 func TimeComparator(a, b time.Time) int {

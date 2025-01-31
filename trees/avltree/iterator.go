@@ -7,11 +7,11 @@ package avltree
 import "github.com/BabelCodePerks/go-ds/containers"
 
 // Assert Iterator implementation
-var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int])(nil)
+var _ containers.ReverseIteratorWithKey[string, int] = (*Iterator[string, int, string])(nil)
 
 // Iterator holding the iterator's state
-type Iterator[K comparable, V any] struct {
-	tree     *Tree[K, V]
+type Iterator[K comparable, V any, S any] struct {
+	tree     *Tree[K, V, S]
 	node     *Node[K, V]
 	position position
 }
@@ -23,20 +23,20 @@ const (
 )
 
 // Iterator returns a stateful iterator whose elements are key/value pairs.
-func (tree *Tree[K, V]) Iterator() *Iterator[K, V] {
-	return &Iterator[K, V]{tree: tree, node: nil, position: begin}
+func (tree *Tree[K, V, S]) Iterator() *Iterator[K, V, S] {
+	return &Iterator[K, V, S]{tree: tree, node: nil, position: begin}
 }
 
 // IteratorAt returns a stateful iterator whose elements are key/value pairs that is initialised at a particular node.
-func (tree *Tree[K, V]) IteratorAt(node *Node[K, V]) *Iterator[K, V] {
-	return &Iterator[K, V]{tree: tree, node: node, position: between}
+func (tree *Tree[K, V, S]) IteratorAt(node *Node[K, V]) *Iterator[K, V, S] {
+	return &Iterator[K, V, S]{tree: tree, node: node, position: between}
 }
 
 // Next moves the iterator to the next element and returns true if there was a next element in the container.
 // If Next() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Next() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
-func (iterator *Iterator[K, V]) Next() bool {
+func (iterator *Iterator[K, V, S]) Next() bool {
 	switch iterator.position {
 	case begin:
 		iterator.position = between
@@ -56,7 +56,7 @@ func (iterator *Iterator[K, V]) Next() bool {
 // If Prev() returns true, then next element's key and value can be retrieved by Key() and Value().
 // If Prev() was called for the first time, then it will point the iterator to the first element if it exists.
 // Modifies the state of the iterator.
-func (iterator *Iterator[K, V]) Prev() bool {
+func (iterator *Iterator[K, V, S]) Prev() bool {
 	switch iterator.position {
 	case end:
 		iterator.position = between
@@ -74,7 +74,7 @@ func (iterator *Iterator[K, V]) Prev() bool {
 
 // Value returns the current element's value.
 // Does not modify the state of the iterator.
-func (iterator *Iterator[K, V]) Value() (v V) {
+func (iterator *Iterator[K, V, S]) Value() (v V) {
 	if iterator.node == nil {
 		return v
 	}
@@ -83,7 +83,7 @@ func (iterator *Iterator[K, V]) Value() (v V) {
 
 // Key returns the current element's key.
 // Does not modify the state of the iterator.
-func (iterator *Iterator[K, V]) Key() (k K) {
+func (iterator *Iterator[K, V, S]) Key() (k K) {
 	if iterator.node == nil {
 		return k
 	}
@@ -92,20 +92,20 @@ func (iterator *Iterator[K, V]) Key() (k K) {
 
 // Node returns the current element's node.
 // Does not modify the state of the iterator.
-func (iterator *Iterator[K, V]) Node() *Node[K, V] {
+func (iterator *Iterator[K, V, S]) Node() *Node[K, V] {
 	return iterator.node
 }
 
 // Begin resets the iterator to its initial state (one-before-first)
 // Call Next() to fetch the first element if any.
-func (iterator *Iterator[K, V]) Begin() {
+func (iterator *Iterator[K, V, S]) Begin() {
 	iterator.node = nil
 	iterator.position = begin
 }
 
 // End moves the iterator past the last element (one-past-the-end).
 // Call Prev() to fetch the last element if any.
-func (iterator *Iterator[K, V]) End() {
+func (iterator *Iterator[K, V, S]) End() {
 	iterator.node = nil
 	iterator.position = end
 }
@@ -113,7 +113,7 @@ func (iterator *Iterator[K, V]) End() {
 // First moves the iterator to the first element and returns true if there was a first element in the container.
 // If First() returns true, then first element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator
-func (iterator *Iterator[K, V]) First() bool {
+func (iterator *Iterator[K, V, S]) First() bool {
 	iterator.Begin()
 	return iterator.Next()
 }
@@ -121,7 +121,7 @@ func (iterator *Iterator[K, V]) First() bool {
 // Last moves the iterator to the last element and returns true if there was a last element in the container.
 // If Last() returns true, then last element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
-func (iterator *Iterator[K, V]) Last() bool {
+func (iterator *Iterator[K, V, S]) Last() bool {
 	iterator.End()
 	return iterator.Prev()
 }
@@ -130,7 +130,7 @@ func (iterator *Iterator[K, V]) Last() bool {
 // passed function, and returns true if there was a next element in the container.
 // If NextTo() returns true, then next element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
-func (iterator *Iterator[K, V]) NextTo(f func(key K, value V) bool) bool {
+func (iterator *Iterator[K, V, S]) NextTo(f func(key K, value V) bool) bool {
 	for iterator.Next() {
 		key, value := iterator.Key(), iterator.Value()
 		if f(key, value) {
@@ -144,7 +144,7 @@ func (iterator *Iterator[K, V]) NextTo(f func(key K, value V) bool) bool {
 // passed function, and returns true if there was a next element in the container.
 // If PrevTo() returns true, then next element's key and value can be retrieved by Key() and Value().
 // Modifies the state of the iterator.
-func (iterator *Iterator[K, V]) PrevTo(f func(key K, value V) bool) bool {
+func (iterator *Iterator[K, V, S]) PrevTo(f func(key K, value V) bool) bool {
 	for iterator.Prev() {
 		key, value := iterator.Key(), iterator.Value()
 		if f(key, value) {

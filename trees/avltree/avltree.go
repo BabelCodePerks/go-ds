@@ -18,13 +18,13 @@ import (
 )
 
 // Assert Tree implementation
-var _ trees.Tree[int] = (*Tree[string, int])(nil)
+var _ trees.Tree[int] = (*Tree[string, int, string])(nil)
 
 // Tree holds elements of the AVL tree.
-type Tree[K comparable, V any] struct {
-	Root        *Node[K, V]         // Root node
-	Comparator  utils.Comparator[K] // Key comparator
-	Comparator2 utils.Comparator2[K]
+type Tree[K comparable, V any, S any] struct {
+	Root        *Node[K, V]             // Root node
+	Comparator  utils.Comparator[K]     // Node comparator
+	Comparator2 utils.Comparator2[K, S] // Search criteria comparator. To work as expected, must sort in the same order as Comparator.
 
 	size int // Total number of keys in the tree
 }
@@ -39,25 +39,24 @@ type Node[K comparable, V any] struct {
 }
 
 // New instantiates an AVL tree with the built-in comparator for K
-func New[K cmp.Ordered, V any]() *Tree[K, V] {
-	return &Tree[K, V]{Comparator: cmp.Compare[K]}
+func New[K cmp.Ordered, V any, S any]() *Tree[K, V, S] {
+	return &Tree[K, V, S]{Comparator: cmp.Compare[K]}
 }
 
 // NewWith instantiates an AVL tree with the custom comparator.
-func NewWith[K comparable, V any](comparator utils.Comparator[K]) *Tree[K, V] {
-	return &Tree[K, V]{Comparator: comparator}
+func NewWith[K comparable, V any, S any](comparator utils.Comparator[K]) *Tree[K, V, S] {
+	return &Tree[K, V, S]{Comparator: comparator}
 }
 
 // Put inserts node into the tree.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Put(key K, value V) {
+func (tree *Tree[K, V, S]) Put(key K, value V) {
 	tree.put(key, value, nil, &tree.Root)
 }
 
-// Get searches the node in the tree by key and returns its value or nil if key is not found in tree.
-// Second return parameter is true if key was found, otherwise false.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Get(key K) (value V, found bool) {
+// Get returns the value of the node found by GetNode(key), if any. Returns with found true if there was a
+// match, otherwise false, in that case value is the zero value of the tree's value type.
+func (tree *Tree[K, V, S]) Get(key K) (value V, found bool) {
 	n := tree.GetNode(key)
 	if n != nil {
 		return n.Value, true
@@ -65,9 +64,22 @@ func (tree *Tree[K, V]) Get(key K) (value V, found bool) {
 	return value, false
 }
 
-// GetNode searches the node in the tree by key and returns its node or nil if key is not found in tree.
-// Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
+// Get2 returns the key of the node found by GetNode2(search), if any. Returns with found true if there was
+// a match, otherwise false, in that case key is the zero value of the tree's key type.
+func (tree *Tree[K, V, S]) Get2(search S) (key K, found bool) {
+	var zeroK K
+	n := tree.GetNode2(search)
+	if n != nil {
+		return n.Key, true
+	}
+	return zeroK, false
+}
+
+// GetNode descends the tree based on Comparator(key, node.key) and returns the (first encountered) node for
+// which Comparator reports a match. Iff Comparator(key) distinguishes all nodes GetNode will find a specific
+// node (or none), otherwise it's undefined which (of multiple matching nodes) is returned. Returns nil if
+// Comparator does not report a match.
+func (tree *Tree[K, V, S]) GetNode(key K) *Node[K, V] {
 	n := tree.Root
 	for n != nil {
 		cmp := tree.Comparator(key, n.Key)
@@ -83,19 +95,39 @@ func (tree *Tree[K, V]) GetNode(key K) *Node[K, V] {
 	return n
 }
 
+// GetNode2 descends the tree based on Comparator2(search, node.key) and returns the (first encountered) node for
+// which Comparator2 reports a match. Iff Comparator2(search) distinguishes all nodes, GetNode2 will find a
+// specific node (or none), otherwise it's undefined which (of multiple matching nodes) is returned. Returns nil
+// if Comparator2 does not report a match.
+func (tree *Tree[K, V, S]) GetNode2(search S) *Node[K, V] {
+	n := tree.Root
+	for n != nil {
+		cmp := tree.Comparator2(search, n.Key)
+		switch {
+		case cmp == 0:
+			return n
+		case cmp < 0:
+			n = n.Children[0]
+		case cmp > 0:
+			n = n.Children[1]
+		}
+	}
+	return n
+}
+
 // Remove remove the node from the tree by key.
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Remove(key K) {
+func (tree *Tree[K, V, S]) Remove(key K) {
 	tree.remove(key, &tree.Root)
 }
 
 // Empty returns true if tree does not contain any nodes.
-func (tree *Tree[K, V]) Empty() bool {
+func (tree *Tree[K, V, S]) Empty() bool {
 	return tree.size == 0
 }
 
 // Size returns the number of elements stored in the tree.
-func (tree *Tree[K, V]) Size() int {
+func (tree *Tree[K, V, S]) Size() int {
 	return tree.size
 }
 
@@ -116,7 +148,7 @@ func (n *Node[K, V]) Size() int {
 }
 
 // Keys returns all keys in-order
-func (tree *Tree[K, V]) Keys() []K {
+func (tree *Tree[K, V, S]) Keys() []K {
 	keys := make([]K, tree.size)
 	it := tree.Iterator()
 	for i := 0; it.Next(); i++ {
@@ -126,7 +158,7 @@ func (tree *Tree[K, V]) Keys() []K {
 }
 
 // Values returns all values in-order based on the key.
-func (tree *Tree[K, V]) Values() []V {
+func (tree *Tree[K, V, S]) Values() []V {
 	values := make([]V, tree.size)
 	it := tree.Iterator()
 	for i := 0; it.Next(); i++ {
@@ -137,13 +169,13 @@ func (tree *Tree[K, V]) Values() []V {
 
 // Left returns the minimum element of the AVL tree
 // or nil if the tree is empty.
-func (tree *Tree[K, V]) Left() *Node[K, V] {
+func (tree *Tree[K, V, S]) Left() *Node[K, V] {
 	return tree.bottom(0)
 }
 
 // Right returns the maximum element of the AVL tree
 // or nil if the tree is empty.
-func (tree *Tree[K, V]) Right() *Node[K, V] {
+func (tree *Tree[K, V, S]) Right() *Node[K, V] {
 	return tree.bottom(1)
 }
 
@@ -155,7 +187,7 @@ func (tree *Tree[K, V]) Right() *Node[K, V] {
 // all nodes in the tree is larger than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Floor(key K) (floor *Node[K, V], found bool) {
+func (tree *Tree[K, V, S]) Floor(key K) (floor *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
@@ -176,11 +208,11 @@ func (tree *Tree[K, V]) Floor(key K) (floor *Node[K, V], found bool) {
 	return nil, false
 }
 
-func (tree *Tree[K, V]) Floor2(value string) (floor *Node[K, V], found bool) {
+func (tree *Tree[K, V, S]) Floor2(search S) (floor *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
-		c := tree.Comparator2(value, n.Key)
+		c := tree.Comparator2(search, n.Key)
 		switch {
 		case c == 0:
 			return n, true
@@ -205,7 +237,7 @@ func (tree *Tree[K, V]) Floor2(value string) (floor *Node[K, V], found bool) {
 // all nodes in the tree is smaller than the given node.
 //
 // Key should adhere to the comparator's type assertion, otherwise method panics.
-func (tree *Tree[K, V]) Ceiling(key K) (ceil *Node[K, V], found bool) {
+func (tree *Tree[K, V, S]) Ceiling(key K) (ceil *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
@@ -226,11 +258,11 @@ func (tree *Tree[K, V]) Ceiling(key K) (ceil *Node[K, V], found bool) {
 	return nil, false
 }
 
-func (tree *Tree[K, V]) Ceiling2(concreteValue string) (ceil *Node[K, V], found bool) {
+func (tree *Tree[K, V, S]) Ceiling2(search S) (ceil *Node[K, V], found bool) {
 	found = false
 	n := tree.Root
 	for n != nil {
-		c := tree.Comparator2(concreteValue, n.Key)
+		c := tree.Comparator2(search, n.Key)
 		switch {
 		case c == 0:
 			return n, true
@@ -248,13 +280,13 @@ func (tree *Tree[K, V]) Ceiling2(concreteValue string) (ceil *Node[K, V], found 
 }
 
 // Clear removes all nodes from the tree.
-func (tree *Tree[K, V]) Clear() {
+func (tree *Tree[K, V, S]) Clear() {
 	tree.Root = nil
 	tree.size = 0
 }
 
 // String returns a string representation of container
-func (tree *Tree[K, V]) String() string {
+func (tree *Tree[K, V, S]) String() string {
 	str := "AVLTree\n"
 	if !tree.Empty() {
 		output(tree.Root, "", true, &str)
@@ -266,7 +298,7 @@ func (n *Node[K, V]) String() string {
 	return fmt.Sprintf("%v", n.Key)
 }
 
-func (tree *Tree[K, V]) put(key K, value V, p *Node[K, V], qp **Node[K, V]) bool {
+func (tree *Tree[K, V, S]) put(key K, value V, p *Node[K, V], qp **Node[K, V]) bool {
 	q := *qp
 	if q == nil {
 		tree.size++
@@ -295,7 +327,7 @@ func (tree *Tree[K, V]) put(key K, value V, p *Node[K, V], qp **Node[K, V]) bool
 	return false
 }
 
-func (tree *Tree[K, V]) remove(key K, qp **Node[K, V]) bool {
+func (tree *Tree[K, V, S]) remove(key K, qp **Node[K, V]) bool {
 	q := *qp
 	if q == nil {
 		return false
@@ -441,7 +473,7 @@ func rotate[K comparable, V any](c int8, s *Node[K, V]) *Node[K, V] {
 	return r
 }
 
-func (tree *Tree[K, V]) bottom(d int) *Node[K, V] {
+func (tree *Tree[K, V, S]) bottom(d int) *Node[K, V] {
 	n := tree.Root
 	if n == nil {
 		return nil
